@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  yt_downloader:
+    build: .
+    container_name: yt_downloader_abc
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./downloads:/app/downloads
+      - ./metrics.sqlite:/app/metrics.sqlite
+    restart: unless-stopped

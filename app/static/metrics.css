@@ -1,0 +1,118 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0d0d0d;
+  color: #ffffff;
+  font-family: "Fira Code", monospace;
+  padding: 20px;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.metrics-panel {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1 1 300px;
+  box-shadow: 0 0 10px rgba(1, 53, 103, 0.4);
+}
+
+.metrics-panel h2 {
+  color: #01c8ff;
+  margin-bottom: 15px;
+}
+
+.metrics-panel h3 {
+  color: #01c8ff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 18px;
+  border-bottom: 1px solid #01c8ff;
+  padding-bottom: 5px;
+}
+
+.metrics-panel ul {
+  list-style: none;
+}
+
+.metrics-panel li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Botões de ação */
+#clear-downloads-btn,
+#reset-metrics-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #01c8ff;
+  color: #0d0d0d;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(1, 200, 255, 0.6);
+  transition: all 0.3s ease-in-out;
+  display: block;
+  width: 100%;
+}
+
+#clear-downloads-btn:hover,
+#reset-metrics-btn:hover {
+  background-color: #02a9d6;
+  box-shadow: 0 0 15px #01c8ff;
+  transform: scale(1.03);
+}
+
+.terminal-panel {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 2 1 500px;
+  box-shadow: 0 0 10px rgba(1, 53, 103, 0.4);
+}
+
+.terminal-panel h2 {
+  color: #01c8ff;
+  margin-bottom: 15px;
+}
+
+.terminal-box {
+  background-color: #0d0d0d;
+  border: 1px solid #333;
+  padding: 15px;
+  height: 400px;
+  overflow-y: scroll;
+  border-radius: 8px;
+  color: #33ff33;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  position: relative;
+}
+
+.terminal-box pre {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .terminal-box {
+    height: 300px;
+  }
+}

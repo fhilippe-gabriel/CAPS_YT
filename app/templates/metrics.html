@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Métricas - CAPS YT Downloader</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='metrics.css') }}"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <div class="metrics-panel">
+        <h2>Métricas</h2>
+        <ul>
+          <li><strong>Acessos:</strong> {{ metrics.access_count }}</li>
+          <li>
+            <strong>Total de Downloads:</strong> {{ metrics.total_downloads }}
+          </li>
+          <li>
+            <strong>Playlist (Músicas):</strong> {{ metrics.playlist_audio }}
+          </li>
+          <li>
+            <strong>Playlist (Vídeos):</strong> {{ metrics.playlist_video }}
+          </li>
+          <li>
+            <strong>Downloads de Músicas:</strong> {{ metrics.music_downloads }}
+          </li>
+        </ul>
+
+        <h3>Downloads por Formato</h3>
+        <ul>
+          <li><strong>MP3:</strong> {{ metrics.formats.mp3 or 0 }}</li>
+          <li><strong>M4A:</strong> {{ metrics.formats.m4a or 0 }}</li>
+          <li><strong>WAV:</strong> {{ metrics.formats.wav or 0 }}</li>
+          <li><strong>MP4:</strong> {{ metrics.formats.mp4 or 0 }}</li>
+          <li><strong>MKV:</strong> {{ metrics.formats.mkv or 0 }}</li>
+        </ul>
+
+        <button id="clear-downloads-btn">🧹 Forçar Limpeza de Downloads</button>
+        <button id="reset-metrics-btn">🗑️ Limpar Métricas e Logs</button>
+      </div>
+
+      <div class="terminal-panel">
+        <h2>Logs em Tempo Real</h2>
+        <div class="terminal-box">
+          {% for log in metrics.logs %}
+          <pre><code>{{ log[0] }} - {{ log[1] }}</code></pre>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Forçar limpeza da pasta de downloads
+      document
+        .getElementById("clear-downloads-btn")
+        .addEventListener("click", async () => {
+          const confirmed = confirm(
+            "Deseja realmente limpar a pasta de downloads?"
+          );
+          if (!confirmed) return;
+
+          try {
+            const response = await fetch("/force-clear-downloads", {
+              method: "POST",
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+              alert(data.message || "Limpeza concluída.");
+              location.reload();
+            } else {
+              alert("Erro ao tentar limpar os arquivos.");
+            }
+          } catch (err) {
+            console.error("Erro ao chamar endpoint de limpeza:", err);
+            alert("Erro na requisição.");
+          }
+        });
+
+      // Limpar métricas e logs
+      document
+        .getElementById("reset-metrics-btn")
+        .addEventListener("click", async () => {
+          const confirmed = confirm(
+            "Tem certeza que deseja apagar todas as métricas e logs?"
+          );
+          if (!confirmed) return;
+
+          try {
+            const response = await fetch(
+              "/caps/source/270306/dash/metrics/reset",
+              { method: "POST" }
+            );
+            const data = await response.json();
+
+            if (response.ok) {
+              alert(data.message || "Métricas e logs apagados.");
+              location.reload();
+            } else {
+              alert("Erro ao limpar métricas.");
+            }
+          } catch (err) {
+            console.error("Erro ao tentar limpar métricas:", err);
+            alert("Erro na requisição.");
+          }
+        });
+    </script>
+  </body>
+</html>

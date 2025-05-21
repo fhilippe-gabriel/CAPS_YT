@@ -1,0 +1,8 @@
+{
+  "tailwindCSS.includeLanguages": {
+    "typescript": "html",
+    "javascript": "html",
+    "typescriptreact": "html", // <== Aqui está o suporte ao .tsx
+    "javascriptreact": "html"
+  }
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPS - YT Downloader</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎬 CAPS - YT Downloader</h1>
+      <p class="subtitle">Baixe vídeos ou áudios do YouTube com facilidade</p>
+
+      <form class="form" id="download-form" method="POST" action="/download">
+        <input
+          type="text"
+          name="url"
+          placeholder="Cole o link do vídeo ou playlist"
+          required
+        />
+
+        <div class="form-group">
+          <label>Formato:</label>
+          <select name="format" id="format-select">
+            <option value="video">Vídeo</option>
+            <option value="audio">Áudio</option>
+          </select>
+        </div>
+
+        <!-- Opções de vídeo -->
+        <div class="form-group" id="video-options">
+          <label>Resolução:</label>
+          <select name="resolution">
+            <option value="144">144p</option>
+            <option value="360">360p</option>
+            <option value="480">480p</option>
+            <option value="720">720p</option>
+            <option value="1080">1080p</option>
+          </select>
+
+          <label>Formato de vídeo:</label>
+          <select name="video_format">
+            <option value="mp4">MP4</option>
+            <option value="mkv">MKV</option>
+          </select>
+
+          <label>Codec de vídeo:</label>
+          <select name="video_codec">
+            <option value="avc1" selected>H.264 (avc1)</option>
+            <option value="av01">AV1 (av01)</option>
+            <option value="vp9">VP9</option>
+          </select>
+        </div>
+
+        <!-- Opções de áudio -->
+        <div class="form-group" id="audio-options" style="display: none">
+          <label>Formato de áudio:</label>
+          <select name="audio_format">
+            <option value="mp3">MP3</option>
+            <option value="m4a">M4A</option>
+            <option value="wav">WAV</option>
+          </select>
+        </div>
+
+        <!-- Checkbox playlist -->
+        <div class="form-group checkbox">
+          <label>
+            <input type="checkbox" name="playlist" id="playlist" />
+            É uma playlist?
+          </label>
+        </div>
+
+        <!-- Barra de progresso -->
+        <div id="progress-container" style="display: none">
+          <label>Progresso do download:</label>
+          <progress id="progress-bar" value="0" max="100"></progress>
+          <span id="progress-text">0%</span>
+        </div>
+
+        <!-- Mensagem de aguarde -->
+        <div id="wait-message">Aguarde alguns instantes...</div>
+
+        <!-- Link final -->
+        <div id="download-link" class="download-link"></div>
+
+        <button type="submit">🔽 Baixar</button>
+      </form>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+      <p>By Fhilippe Silva</p>
+      <div class="footer-icons">
+        <a
+          href="https://www.instagram.com/fhilippe.many/"
+          target="_blank"
+          aria-label="Instagram"
+        >
+          <img
+            src="{{ url_for('static', filename='icons/instagram.svg') }}"
+            alt="Instagram"
+          />
+        </a>
+        <a
+          href="https://github.com/fhilippe-gabriel"
+          target="_blank"
+          aria-label="GitHub"
+        >
+          <img
+            src="{{ url_for('static', filename='icons/github.svg') }}"
+            alt="GitHub"
+          />
+        </a>
+      </div>
+    </footer>
+
+    <!-- Alternar opções -->
+    <script>
+      const formatSelect = document.getElementById("format-select");
+      const videoOptions = document.getElementById("video-options");
+      const audioOptions = document.getElementById("audio-options");
+
+      function toggleFormatOptions() {
+        const selected = formatSelect.value;
+        audioOptions.style.display = selected === "audio" ? "block" : "none";
+        videoOptions.style.display = selected === "video" ? "block" : "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", toggleFormatOptions);
+      formatSelect.addEventListener("change", toggleFormatOptions);
+    </script>
+
+    <!-- Lógica de progresso -->
+    <script>
+      const form = document.getElementById("download-form");
+      const progressContainer = document.getElementById("progress-container");
+      const progressBar = document.getElementById("progress-bar");
+      const progressText = document.getElementById("progress-text");
+      const downloadLink = document.getElementById("download-link");
+      const waitMessage = document.getElementById("wait-message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        progressContainer.style.display = "block";
+        progressBar.value = 0;
+        progressText.textContent = "0%";
+        downloadLink.innerHTML = "";
+        waitMessage.style.display = "none";
+
+        const formData = new FormData(form);
+        const res = await fetch("/download", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        const downloadId = data.download_id;
+
+        const interval = setInterval(async () => {
+          const res = await fetch(`/progress/${downloadId}`);
+          const progressData = await res.json();
+
+          if (progressData.progress !== undefined) {
+            progressBar.value = progressData.progress;
+            progressText.textContent = progressData.progress + "%";
+          }
+
+          if (progressData.progress >= 100 && progressData.filename) {
+            clearInterval(interval);
+            progressText.textContent = "Concluído!";
+            waitMessage.style.display = "block";
+
+            setTimeout(() => {
+              waitMessage.style.display = "none";
+              const link = document.createElement("a");
+              link.href = `/download/file/${downloadId}`;
+              link.textContent = "Clique aqui para baixar o arquivo";
+              link.className = "download-anchor";
+              downloadLink.appendChild(link);
+            }, 1200);
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
