@@ -62,7 +62,16 @@ YT_Downloader_ABC/
 
 ---
 
+## 👨‍💻 Desenvolvedor
+
+**Fhilippe**  
+💼 [GitHub](https://github.com/fhilippe-gabriel)  
+📧 [fhilippedev@gmail.com](mailto:fhilippedev@gmail.com)
+
+---
+
 ## 🇺🇸 English Instructions
+
 
 ### ⚙️ Features
 
@@ -99,8 +108,31 @@ http://localhost:5000
 ---
 
 ### 📁 Project Structure
+```
+YT_Downloader_ABC/
+├── app/
+│   ├── static/            # Arquivos CSS e ícones
+│   ├── templates/         # HTMLs (index.html)
+│   ├── downloader/        # Lógica com yt-dlp
+│   ├── routes.py          # Rotas principais
+│   ├── db.py              # Banco de dados SQLite
+│   ├── tasks.py           # Agendador de limpeza de arquivos
+│   └── __init__.py        # Inicializador Flask
+├── downloads/             # Arquivos baixados
+├── metrics.sqlite         # Banco de dados persistente
+├── Dockerfile             # Imagem Docker
+├── docker-compose.yml     # Orquestração com Docker
+├── requirements.txt       # Dependências do projeto
+└── run.py                 # Inicializador principal
+```
 
-See Portuguese section above ☝️
+## 👨‍💻 Development
+
+**Fhilippe**  
+💼 [GitHub](https://github.com/fhilippe-gabriel)  
+📧 [fhilippedev@gmail.com](mailto:fhilippedev@gmail.com)
+
+---
 
 ---
 
