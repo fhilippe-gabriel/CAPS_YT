@@ -29,7 +29,7 @@ cd YT_Downloader_ABC
 #### 2. Construa e execute com Docker Compose:
 
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
 #### 3. Acesse no navegador:
