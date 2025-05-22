@@ -22,7 +22,7 @@
 #### 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/YT_Downloader_ABC.git
+git clone https://github.com/fhilippe-gabriel/YT_Downloader_ABC.git
 cd YT_Downloader_ABC
 ```
 
@@ -89,7 +89,7 @@ YT_Downloader_ABC/
 #### 1. Clone this repository:
 
 ```bash
-git clone https://github.com/your-username/YT_Downloader_ABC.git
+git clone https://github.com/fhilippe-gabriel/YT_Downloader_ABC.git
 cd YT_Downloader_ABC
 ```
 
