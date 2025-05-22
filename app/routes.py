@@ -2,15 +2,16 @@ import os
 import uuid
 import threading
 from flask import Blueprint, render_template, request, send_file, jsonify
-from downloader.youtube_ytdlp import process_download
 from datetime import datetime
+
+from downloader.youtube_ytdlp import process_download
 from .db import (
     increment_access, increment_download,
     increment_playlist_audio, increment_playlist_video,
     increment_music, increment_format,
-    insert_log, get_metrics, reset_all_metrics  # 👈 IMPORTADO
+    insert_log, get_metrics, reset_all_metrics
 )
-from .tasks import clear_downloads_folder  # 👈 Importação da função de limpeza
+from .tasks import clear_downloads_folder, update_dependencies  # ✅ IMPORTAR update_dependencies
 
 main = Blueprint('main', __name__)
 download_progress = {}
@@ -61,7 +62,6 @@ def start_download():
             download_progress[download_id]["filename"] = filepath
             increment_download()
 
-            # Contagem específica
             if is_playlist and format_type == "audio":
                 increment_playlist_audio()
             elif is_playlist and format_type == "video":
@@ -69,16 +69,16 @@ def start_download():
             elif format_type == "audio":
                 increment_music()
 
-            # Registra formato
             format_used = audio_format if format_type == "audio" else video_format
             increment_format(format_used)
 
-            insert_log(f"Download concluído: {filepath}")
+            insert_log(f"Download concluído com sucesso: {filepath}")
         except Exception as e:
-            download_progress[download_id]["error"] = str(e)
+            error_msg = str(e)
+            download_progress[download_id]["error"] = error_msg
             download_progress[download_id]["progress"] = -1
-            insert_log(f"[ERRO] Falha no download: {e}")
-            print(f"[ERRO] Falha no download: {e}")
+            insert_log(f"[ERRO] Falha ao processar download: {error_msg}")
+            print(f"[ERRO] {error_msg}")
 
     threading.Thread(target=download_task).start()
     return jsonify({"download_id": download_id})
@@ -111,14 +111,20 @@ def show_metrics():
 @main.route('/force-clear-downloads', methods=['POST'])
 def force_clear_downloads():
     clear_downloads_folder()
-    insert_log("[MANUAL] Limpeza forçada da pasta downloads via painel.")
-    return jsonify({"message": "Limpeza forçada concluída com sucesso."}), 200
+    insert_log("[MANUAL] Limpeza da pasta downloads forçada via painel.")
+    return jsonify({"message": "Limpeza forçada da pasta downloads concluída com sucesso."}), 200
 
-@main.route('/caps/source/270306/dash/metrics/reset', methods=['POST'])  # 👈 NOVA ROTA
+@main.route('/caps/source/270306/dash/metrics/reset', methods=['POST'])
 def reset_metrics():
     reset_all_metrics()
-    insert_log("[MANUAL] Todos os dados de métricas e logs foram resetados.")
-    return jsonify({"message": "Todas as métricas e logs foram zerados com sucesso."}), 200
+    insert_log("[MANUAL] Todas as métricas e logs foram resetados manualmente.")
+    return jsonify({"message": "Métricas e logs zerados com sucesso."}), 200
+
+@main.route('/force-update-dependencies', methods=['POST'])  # ✅ NOVA ROTA
+def force_update_dependencies():
+    threading.Thread(target=update_dependencies).start()
+    insert_log("[MANUAL] Atualização manual de dependências iniciada via painel.")
+    return jsonify({"message": "Atualização de dependências iniciada com sucesso."}), 200
 
 def update_progress(download_id, percent):
     if download_id in download_progress:

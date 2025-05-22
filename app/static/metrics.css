@@ -50,7 +50,7 @@ body {
   font-size: 16px;
 }
 
-/* Botões de ação */
+/* Botões padrão */
 #clear-downloads-btn,
 #reset-metrics-btn {
   margin-top: 15px;
@@ -72,6 +72,29 @@ body {
 #reset-metrics-btn:hover {
   background-color: #02a9d6;
   box-shadow: 0 0 15px #01c8ff;
+  transform: scale(1.03);
+}
+
+/* Botão verde para atualizar dependências */
+#update-dependencies-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #00e676;
+  color: #0d0d0d;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 230, 118, 0.5);
+  transition: all 0.3s ease-in-out;
+  display: block;
+  width: 100%;
+}
+
+#update-dependencies-btn:hover {
+  background-color: #00c853;
+  box-shadow: 0 0 15px #00e676;
   transform: scale(1.03);
 }
 
@@ -114,5 +137,11 @@ body {
 
   .terminal-box {
     height: 300px;
+  }
+
+  #clear-downloads-btn,
+  #reset-metrics-btn,
+  #update-dependencies-btn {
+    width: 100%;
   }
 }

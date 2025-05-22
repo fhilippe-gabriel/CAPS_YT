@@ -40,6 +40,12 @@
 
         <button id="clear-downloads-btn">🧹 Forçar Limpeza de Downloads</button>
         <button id="reset-metrics-btn">🗑️ Limpar Métricas e Logs</button>
+        <button
+          id="update-dependencies-btn"
+          style="background-color: #00e676; color: #000; font-weight: bold"
+        >
+          🔄 Atualizar Dependências
+        </button>
       </div>
 
       <div class="terminal-panel">
@@ -53,7 +59,7 @@
     </div>
 
     <script>
-      // Forçar limpeza da pasta de downloads
+      // Limpeza de downloads
       document
         .getElementById("clear-downloads-btn")
         .addEventListener("click", async () => {
@@ -67,20 +73,15 @@
               method: "POST",
             });
             const data = await response.json();
-
-            if (response.ok) {
-              alert(data.message || "Limpeza concluída.");
-              location.reload();
-            } else {
-              alert("Erro ao tentar limpar os arquivos.");
-            }
+            alert(data.message || "Limpeza concluída.");
+            location.reload();
           } catch (err) {
             console.error("Erro ao chamar endpoint de limpeza:", err);
             alert("Erro na requisição.");
           }
         });
 
-      // Limpar métricas e logs
+      // Reset de métricas
       document
         .getElementById("reset-metrics-btn")
         .addEventListener("click", async () => {
@@ -95,15 +96,32 @@
               { method: "POST" }
             );
             const data = await response.json();
-
-            if (response.ok) {
-              alert(data.message || "Métricas e logs apagados.");
-              location.reload();
-            } else {
-              alert("Erro ao limpar métricas.");
-            }
+            alert(data.message || "Métricas e logs apagados.");
+            location.reload();
           } catch (err) {
             console.error("Erro ao tentar limpar métricas:", err);
+            alert("Erro na requisição.");
+          }
+        });
+
+      // Atualização de dependências
+      document
+        .getElementById("update-dependencies-btn")
+        .addEventListener("click", async () => {
+          const confirmed = confirm(
+            "Deseja forçar a atualização dos pacotes Python agora?"
+          );
+          if (!confirmed) return;
+
+          try {
+            const response = await fetch("/force-update-dependencies", {
+              method: "POST",
+            });
+            const data = await response.json();
+            alert(data.message || "Atualização concluída.");
+            location.reload();
+          } catch (err) {
+            console.error("Erro ao forçar atualização:", err);
             alert("Erro na requisição.");
           }
         });
